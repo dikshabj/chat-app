@@ -1,0 +1,19 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Jab tum main branch par push karogi, ye chalega
+
+jobs:
+  build:
+    runs-on: self-hosted  # <--- YE IMPORTANT HAI (Ye tumhare EC2 ko target karega)
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        
+      - name: Say Hello
+        run: |
+          echo "Hello from GitHub!"
+          ls -la
