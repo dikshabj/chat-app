@@ -1,18 +1,20 @@
+
 import React from "react";
 import useConversation from "../../zustand/useConversation";
-import { useSocketContext } from "../../context/socketContext.jsx";
+// 1. Update Import to match the new Capitalized name
+import { useSocketContext } from "../../context/socketContext.jsx"; 
 
 function ChatHeader() {
   const { selectedConversation } = useConversation();
-  const { onlineUsers } = useSocketContext();
+  
+  // 2. Use the correct hook name
+  const { onlineUsers } = useSocketContext(); 
 
   if (!selectedConversation) return null;
 
   const isOnline = onlineUsers.includes(selectedConversation._id);
 
   return (
-    // ✅ FIX: 'w-full' add kiya taaki ye pura width le.
-    // 'sticky top-0 z-10' bhi add kar sakte ho agar scroll karte waqt header chipka rehna chahiye.
     <div className="w-full flex items-center gap-4 bg-slate-800 px-4 md:px-6 py-3 border-b border-slate-700 shadow-md">
       
       {/* Avatar Container */}
@@ -31,7 +33,7 @@ function ChatHeader() {
       </div>
 
       {/* Name & Status */}
-      <div className="flex flex-col flex-1"> {/* 'flex-1' text ko failne ki jagah dega */}
+      <div className="flex flex-col flex-1"> 
         <h3 className="font-semibold text-gray-100 text-lg tracking-wide capitalize truncate">
             {selectedConversation.name}
         </h3>
