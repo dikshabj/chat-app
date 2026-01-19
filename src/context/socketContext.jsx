@@ -2,13 +2,13 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { useAuth } from "./AuthProvider";
 import io from "socket.io-client";
 
-const SocketContext = createContext();
+const socketContext = createContext();
 
 export const useSocketContext = () => {
-    return useContext(SocketContext);
+    return useContext(socketContext);
 };
 
-export const SocketContextProvider = ({ children }) => {
+export const socketContextProvider = ({ children }) => {
     const [socket, setSocket] = useState(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [authUser] = useAuth();
@@ -52,8 +52,8 @@ export const SocketContextProvider = ({ children }) => {
     }, [authUser]);
 
     return (
-        <SocketContext.Provider value={{ socket, onlineUsers }}>
+        <socketContext.Provider value={{ socket, onlineUsers }}>
             {children}
-        </SocketContext.Provider>
+        </socketContext.Provider>
     );
 };
