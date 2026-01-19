@@ -1,19 +1,73 @@
-name: Deploy to EC2
+name: Deploy Fullstack App on EC2
 
 on:
   push:
     branches:
-      - main  # Jab tum main branch par push karogi, ye chalega
+      - main
 
 jobs:
-  build:
-    runs-on: self-hosted  # <--- YE IMPORTANT HAI (Ye tumhare EC2 ko target karega)
+  deploy:
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [22.x]
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
-        
-      - name: Say Hello
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+
+      # ------------------------------
+      # BACKEND SETUP
+      # ------------------------------
+      - name: Install backend dependencies
+        working-directory: ./server
+        run: npm install
+
+      - name: Create backend .env file
+        working-directory: ./server
         run: |
-          echo "Hello from GitHub!"
-          ls -la
+          touch .env
+          echo "${{ secrets.PROD_BACKEND_ENV }}" > .env
+
+      - name: Start backend with PM2
+        working-directory: ./server
+        run: |
+          /home/ubuntu/.nvm/versions/node/v22.16.0/bin/pm2 restart backend || /home/ubuntu/.nvm/versions/node/v22.16.0/bin/pm2 start index.js --name backend
+
+      # ------------------------------
+      # FRONTEND SETUP
+      # ------------------------------
+      - name: Clean npm cache & remove existing dependencies
+        working-directory: ./client
+        run: |
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
+
+      - name: Install frontend dependencies
+        working-directory: ./client
+        run: npm install
+
+      - name: Create frontend .env file
+        working-directory: ./client
+        run: |
+          touch .env
+          echo "${{ secrets.PROD_FRONTEND_ENV }}" > .env
+
+      - name: Build frontend
+        working-directory: ./client
+        run: npm run build
+
+      - name: Deploy frontend to Nginx
+        run: |
+          sudo rm -rf /var/www/html/*
+          sudo cp -r ./client/dist/* /var/www/html/
