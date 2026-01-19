@@ -1,0 +1,25 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "description": "..message model..\r senderid\r receiverid\r message",
+  "homepage": "https://github.com/dikshabj/chat-app#readme",
+  "bugs": {
+    "url": "https://github.com/dikshabj/chat-app/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dikshabj/chat-app.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "react-hook-form": "^7.69.0",
+    "react-router-dom": "^7.11.0"
+  }
+}
