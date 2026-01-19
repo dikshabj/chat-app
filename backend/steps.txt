@@ -1,0 +1,35 @@
+1. Setup the project for the full stack / if already no issues.
+2. should have a basic api.
+3. create ec2 instance on aws.
+4. Push your code to github.
+5. Setup the self-hosted runner on github.
+6. make the action file to get started with out deployment process.
+7. install dependices on the system and check code base.
+8. install inginx on the ec2 instance.
+9. deploy the backend.
+10. deployment the frontend.
+
+
+
+sudo apt-get update
+
+sudo apt-get install -y nginx
+
+sudo npm i -g pm2
+
+cd /etc/nginx/sites-available
+sudo nano default
+
+
+location /api {
+    rewrite ^\/api\/(.*)$ /api/$1 break;
+    proxy_pass http://localhost:8000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+
+sudo systemctl restart nginx
+
+cd /path/to/your/app
+pm2 start server.js --name=Backend
